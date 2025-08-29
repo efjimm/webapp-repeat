@@ -1,7 +1,9 @@
 export const getMovies = async () => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&include_adult=false&page=1`,
-  );
+  const response = await fetch("http://localhost:8080/api/movies", {
+    headers: {
+      Authorization: window.localStorage.getItem("token"),
+    },
+  });
   return response.json();
 };
 

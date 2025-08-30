@@ -25,6 +25,7 @@ export function getPerson(id) {
   );
 }
 
+/// Trending movies don't support pagination for some reason.
 export function getTrendingMovies() {
   return fetchJson(
     `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,

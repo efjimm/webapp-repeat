@@ -11,6 +11,8 @@ import {
   getMovieReviews,
   getPersonMovies,
   getPerson,
+  getTrendingMovies,
+  getTopRatedMovies,
 } from "../tmdb-api";
 
 const router = express.Router();
@@ -48,6 +50,7 @@ router.get("/:id/images", movieDataRoute(getMovieImages, "images"));
 router.get("/:id/reviews", movieDataRoute(getMovieReviews, "reviews"));
 
 router.get("/upcoming", simpleRoute(getUpcomingMovies, "upcoming movies"));
+router.get("/trending", simpleRoute(getTrendingMovies, "trending movies"));
 router.get("/genres", simpleRoute(getGenres, "genres"));
 
 router.get(
@@ -75,6 +78,16 @@ router.get(
     [page] = [+page];
 
     doFetch(res, getMovies, "Failed to fetch movies", page);
+  }),
+);
+
+router.get(
+  "/top_rated",
+  asyncHandler(async (req, res) => {
+    let { page = 1 } = req.query;
+    [page] = [+page];
+
+    doFetch(res, getTopRatedMovies, "Failed to fetch top rated movies", page);
   }),
 );
 

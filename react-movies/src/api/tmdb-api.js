@@ -56,16 +56,11 @@ export function getPerson(args) {
 }
 
 export function getTrendingMovies() {
-  return fetchJson(
-    `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
-  );
+  return fetchJson(`http://localhost:8080/api/movies/trending`);
 }
 
-export function getTopRatedMovies(args) {
-  const page = args.queryKey[1].page;
-  return fetchJson(
-    `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&page=${page}`,
-  );
+export function getTopRatedMovies(page) {
+  return fetchJson(`http://localhost:8080/api/movies/top_rated?page=${page}`);
 }
 
 export function getMovieCredits(args) {

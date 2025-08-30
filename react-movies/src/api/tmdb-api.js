@@ -1,19 +1,4 @@
-function fetchJsonData(url) {
-  return fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error;
-    });
-}
-
-async function fetch2(url) {
+async function fetchJson(url) {
   const response = await fetch(url);
 
   if (!response.ok) throw new Error();
@@ -62,58 +47,56 @@ export async function getMovies(args) {
 
 export function getPersonMovies(args) {
   const id = args.queryKey[1].id;
-  return fetchJsonData(
+  return fetchJson(
     `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
 }
 
 export function getPerson(args) {
   const id = args.queryKey[1].id;
-  return fetchJsonData(
+  return fetchJson(
     `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
 }
 
 export function getTrendingMovies() {
-  return fetchJsonData(
+  return fetchJson(
     `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
 }
 
 export function getTopRatedMovies(args) {
   const page = args.queryKey[1].page;
-  return fetchJsonData(
+  return fetchJson(
     `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&page=${page}`,
   );
 }
 
 export function getMovieCredits(args) {
   const id = args.queryKey[1].id;
-  return fetch2(`http://localhost:8080/api/movies/${id}/credits`);
+  return fetchJson(`http://localhost:8080/api/movies/${id}/credits`);
 }
 
 export function getMovie(args) {
   const [, idPart] = args.queryKey;
   const { id } = idPart;
-  return fetch2(`http://localhost:8080/api/movies/${id}/details`);
+  return fetchJson(`http://localhost:8080/api/movies/${id}/details`);
 }
 
 export function getGenres() {
-  return fetch2(`http://localhost:8080/api/movies/genres`);
+  return fetchJson(`http://localhost:8080/api/movies/genres`);
 }
 
 export function getMovieImages({ queryKey }) {
   const id = queryKey[1].id;
-  return fetch2(`http://localhost:8080/api/movies/${id}/images`);
+  return fetchJson(`http://localhost:8080/api/movies/${id}/images`);
 }
 
 export function getMovieReviews({ queryKey }) {
   const id = queryKey[1].id;
-  return fetch2(`http://localhost:8080/api/movies/${id}/reviews`);
+  return fetchJson(`http://localhost:8080/api/movies/${id}/reviews`);
 }
 
 export function getUpcomingMovies() {
-  return fetchJsonData(
-    `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&page=1`,
-  );
+  return fetchJson(`http://localhost:8080/api/movies/upcoming`);
 }

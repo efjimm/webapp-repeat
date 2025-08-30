@@ -13,19 +13,40 @@ import {
 
 const router = express.Router();
 
+/// Calls the given fetch function and returns the response as JSON.
+async function doFetch(res, fetchFn, errMsg, ...args) {
+  try {
+    const data = await fetchFn(...args);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error(errMsg, error);
+    res.status(500).json({ error: errMsg });
+  }
+}
+
+/// Returns a route handler that simply calls the fetch function with no arguments and
+/// returns the JSON data received.
+function simpleRoute(fetchFn, name) {
+  return asyncHandler(async (_, res) => {
+    doFetch(res, fetchFn, `Failed to fetch ${name}`);
+  });
+}
+
+/// Returns a route handler that passes a movie ID from the URL to the fetch function.
 function movieDataRoute(fetchFn, name) {
   return asyncHandler(async (req, res) => {
     const id = parseInt(req.params.id);
-
-    try {
-      const data = await fetchFn(id);
-      res.status(200).json(data);
-    } catch (error) {
-      console.error(`Error fetching ${name}:`, error);
-      res.status(500).json({ error: `Failed to fetch ${name}` });
-    }
+    doFetch(res, fetchFn, `Failed to fetch ${name}`, id);
   });
 }
+
+router.get("/:id/details", movieDataRoute(getMovie, "details"));
+router.get("/:id/credits", movieDataRoute(getMovieCredits, "credits"));
+router.get("/:id/images", movieDataRoute(getMovieImages, "images"));
+router.get("/:id/reviews", movieDataRoute(getMovieReviews, "reviews"));
+
+router.get("/upcoming", simpleRoute(getUpcomingMovies, "upcoming movies"));
+router.get("/genres", simpleRoute(getGenres, "genres"));
 
 router.get(
   "/",
@@ -33,34 +54,7 @@ router.get(
     let { page = 1 } = req.query;
     [page] = [+page];
 
-    try {
-      const movies = await getMovies(page);
-      res.status(200).json(movies);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-      res.status(500).json({ error: "Failed to fetch movies" });
-    }
-  }),
-);
-
-router.get("/:id/details", movieDataRoute(getMovie, "details"));
-router.get("/:id/credits", movieDataRoute(getMovieCredits, "credits"));
-router.get("/:id/images", movieDataRoute(getMovieImages, "images"));
-router.get("/:id/reviews", movieDataRoute(getMovieReviews, "reviews"));
-
-router.get(
-  "/tmdb/upcoming",
-  asyncHandler(async (req, res) => {
-    const upcomingMovies = await getUpcomingMovies();
-    res.status(200).json(upcomingMovies);
-  }),
-);
-
-router.get(
-  "/genres",
-  asyncHandler(async (req, res) => {
-    const genres = await getGenres();
-    res.status(200).json(genres);
+    doFetch(res, getMovies, "Failed to fetch movies", page);
   }),
 );
 

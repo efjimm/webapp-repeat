@@ -89,15 +89,13 @@ export function getTopRatedMovies(args) {
 
 export function getMovieCredits(args) {
   const id = args.queryKey[1].id;
-  return fetchJsonData(
-    `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
-  );
+  return fetch2(`http://localhost:8080/api/movies/${id}/credits`);
 }
 
-export async function getMovie(args) {
+export function getMovie(args) {
   const [, idPart] = args.queryKey;
   const { id } = idPart;
-  return fetch2(`http://localhost:8080/api/movies/${id}`);
+  return fetch2(`http://localhost:8080/api/movies/${id}/details`);
 }
 
 export function getGenres() {

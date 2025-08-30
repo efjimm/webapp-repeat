@@ -49,7 +49,7 @@ function CastCredit({ credit }) {
             </Grid>
             <Grid>
               <Typography component="p">
-                <StarRate fontsize="small" />
+                <StarRate fontSize="small" />
                 {"  "} {credit.popularity}{" "}
               </Typography>
             </Grid>

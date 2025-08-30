@@ -13,6 +13,14 @@ function fetchJsonData(url) {
     });
 }
 
+async function fetch2(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) throw new Error();
+
+  return await response.json();
+}
+
 export function getMovies(page) {
   console.log(`Fetch page ${page}`);
   return fetchJsonData(
@@ -47,18 +55,16 @@ export function getTopRatedMovies(args) {
   );
 }
 
-export function getMovieCredits(args) {
-  const id = args.queryKey[1].id;
-  return fetchJsonData(
+export async function getMovieCredits(id) {
+  return fetch2(
     `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
 }
 
 export async function getMovie(id) {
-  const response = await fetch(
+  return fetch2(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}`,
   );
-  return await response.json();
 }
 
 export function getGenres() {

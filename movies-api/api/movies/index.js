@@ -1,7 +1,13 @@
 import movieModel from "./movieModel";
 import asyncHandler from "express-async-handler";
 import express from "express";
-import { getMovie, getMovies, getUpcomingMovies, getGenres } from "../tmdb-api";
+import {
+  getMovie,
+  getMovies,
+  getUpcomingMovies,
+  getGenres,
+  getMovieCredits,
+} from "../tmdb-api";
 
 const router = express.Router();
 
@@ -21,17 +27,30 @@ router.get(
   }),
 );
 
-// Get movie details
 router.get(
-  "/:id",
+  "/:id/details",
   asyncHandler(async (req, res) => {
     const id = parseInt(req.params.id);
     try {
-      const movies = await getMovie(id);
-      res.status(200).json(movies);
+      const movie = await getMovie(id);
+      res.status(200).json(movie);
     } catch (error) {
-      console.error("Error fetching movies:", error);
-      res.status(500).json({ error: "Failed to fetch movies" });
+      console.error("Error fetching movie:", error);
+      res.status(500).json({ error: "Failed to fetch movie" });
+    }
+  }),
+);
+
+router.get(
+  "/:id/credits",
+  asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+      const credits = await getMovieCredits(id);
+      res.status(200).json(credits);
+    } catch (error) {
+      console.error("Error fetching credits:", error);
+      res.status(500).json({ error: "Failed to fetch credits" });
     }
   }),
 );

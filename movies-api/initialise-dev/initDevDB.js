@@ -3,8 +3,8 @@ dotenv.config();
 import mongoose from "mongoose";
 import users from "./users";
 import movies from "./movies";
-import User from "../api/users/userModel";
-import Movie from "../api/movies/movieModel";
+import User from "../src/users/userModel";
+import Movie from "../src/movies/movieModel";
 
 async function main() {
   if (process.env.NODE_ENV !== "development") {

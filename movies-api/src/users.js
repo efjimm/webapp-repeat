@@ -1,13 +1,14 @@
 import express from "express";
-import User from "./userModel";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
+
+import { userModel } from "./models.js";
 
 const router = express.Router(); // eslint-disable-line
 
 // Get all users
 router.get("/", async (_, res) => {
-  const users = await User.find();
+  const users = await userModel.find();
   res.status(200).json(users);
 });
 
@@ -37,7 +38,7 @@ router.post(
 // Update a user
 router.put("/:id", async (req, res) => {
   if (req.body._id) delete req.body._id;
-  const result = await User.updateOne(
+  const result = await userModel.updateOne(
     {
       _id: req.params.id,
     },
@@ -51,17 +52,17 @@ router.put("/:id", async (req, res) => {
 });
 
 async function registerUser(req, res) {
-  const user = await User.findByUserName(req.body.username);
+  const user = await userModel.findByUserName(req.body.username);
   if (user) {
     return res.status(409).json({ success: false, msg: "User already exists" });
   }
 
-  await User.create(req.body);
+  await userModel.create(req.body);
   res.status(201).json({ success: true, msg: "User successfully created." });
 }
 
 async function authenticateUser(req, res) {
-  const user = await User.findByUserName(req.body.username);
+  const user = await userModel.findByUserName(req.body.username);
   if (!user) {
     return res
       .status(401)

@@ -1,6 +1,6 @@
-import movieModel from "./movieModel";
 import asyncHandler from "express-async-handler";
 import express from "express";
+
 import {
   getMovie,
   getMovies,
@@ -13,7 +13,7 @@ import {
   getPerson,
   getTrendingMovies,
   getTopRatedMovies,
-} from "../tmdb-api";
+} from "./tmdb.js";
 
 const router = express.Router();
 

@@ -2,7 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Navigate, Routes } from "react-router-dom";
 import * as pages from "./pages.js";
-import { SiteHeader } from "./components.js";
+import { ProtectedRoutes, SiteHeader } from "./components.js";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import * as context from "./contexts.js";
@@ -25,10 +25,12 @@ const App = () => {
           <SiteHeader />
           <context.MoviesProvider>
             <Routes>
-              <Route
-                path="/movies/favorites"
-                element={<pages.FavoriteMovies />}
-              />
+              <Route element={<ProtectedRoutes />}>
+                <Route
+                  path="/movies/favorites"
+                  element={<pages.FavoriteMovies />}
+                />
+              </Route>
               <Route
                 path="/movies/upcoming"
                 element={<pages.UpcomingMovies />}

@@ -2,7 +2,13 @@ import React, { useState, useContext } from "react";
 import { useQuery } from "react-query";
 import truncate from "lodash/truncate";
 import { useForm, Controller } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import * as ui from "@mui/material";
 import * as icons from "@mui/icons-material";
@@ -12,6 +18,17 @@ import * as context from "./contexts.js";
 import * as endpoints from "./endpoints.js";
 import placeholderImg from "./images/film-poster-placeholder.png";
 import filterImg from "./images/pexels-dziana-hasanbekava-5480827.jpg";
+
+export function ProtectedRoutes() {
+  const ctx = useContext(context.Auth);
+  const location = useLocation();
+
+  return ctx.isAuthenticated === true ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  );
+}
 
 export function WriteReviewIcon({ movie }) {
   return (
@@ -698,9 +715,7 @@ export function SiteHeader() {
     { label: "Top Rated", path: "/movies/top_rated" },
   ];
   console.log(`Authed: ${ctx.isAuthenticated}`);
-  if (ctx.isAuthenticated) {
-    menuOptions.push({ label: "Log out", path: "/" });
-  } else {
+  if (!ctx.isAuthenticated) {
     menuOptions.push(
       { label: "Sign up", path: "/signup" },
       { label: "Log in", path: "/login" },
@@ -774,6 +789,13 @@ export function SiteHeader() {
                   {opt.label}
                 </ui.Button>
               ))}
+              {ctx.isAuthenticated ? (
+                <ui.Button color="inherit" onClick={ctx.signout}>
+                  Log out
+                </ui.Button>
+              ) : (
+                <> </>
+              )}
             </>
           )}
         </ui.Toolbar>

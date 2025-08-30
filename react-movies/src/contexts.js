@@ -1,9 +1,9 @@
 import React, { useState, createContext } from "react";
 import { login, signup } from "./endpoints.js";
 
-export const MoviesContext = React.createContext(null);
+export const Movies = React.createContext(null);
 
-export const MoviesContextProvider = (props) => {
+export function MoviesProvider(props) {
   const [favorites, setFavorites] = useState([]);
   const [myReviews, setMyReviews] = useState({});
   const [mustWatch, setMustWatch] = useState([]);
@@ -37,7 +37,7 @@ export const MoviesContextProvider = (props) => {
   };
 
   return (
-    <MoviesContext.Provider
+    <Movies.Provider
       value={{
         favorites,
         addToFavorites,
@@ -48,13 +48,13 @@ export const MoviesContextProvider = (props) => {
       }}
     >
       {props.children}
-    </MoviesContext.Provider>
+    </Movies.Provider>
   );
-};
+}
 
-export const AuthContext = createContext(null);
+export const Auth = createContext(null);
 
-export const AuthContextProvider = (props) => {
+export const AuthProvider = (props) => {
   const existingToken = localStorage.getItem("token");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [_, setAuthToken] = useState(existingToken);
@@ -85,7 +85,7 @@ export const AuthContextProvider = (props) => {
   };
 
   return (
-    <AuthContext.Provider
+    <Auth.Provider
       value={{
         isAuthenticated,
         authenticate,
@@ -95,6 +95,6 @@ export const AuthContextProvider = (props) => {
       }}
     >
       {props.children}
-    </AuthContext.Provider>
+    </Auth.Provider>
   );
 };

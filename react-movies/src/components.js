@@ -8,8 +8,8 @@ import * as ui from "@mui/material";
 import * as icons from "@mui/icons-material";
 import { styled, useTheme } from "@mui/material/styles";
 
-import { AuthContext, MoviesContext } from "./contexts.js";
-import { getGenres, getMovieImages, getMovieReviews } from "./endpoints.js";
+import * as context from "./contexts.js";
+import * as endpoints from "./endpoints.js";
 import placeholderImg from "./images/film-poster-placeholder.png";
 import filterImg from "./images/pexels-dziana-hasanbekava-5480827.jpg";
 
@@ -27,11 +27,11 @@ export function WriteReviewIcon({ movie }) {
 }
 
 export function AddToFavoritesIcon({ movie }) {
-  const context = useContext(MoviesContext);
+  const ctx = useContext(context.Movies);
 
   const handleAddToFavorites = (e) => {
     e.preventDefault();
-    context.addToFavorites(movie);
+    ctx.addToFavorites(movie);
   };
 
   return (
@@ -42,11 +42,11 @@ export function AddToFavoritesIcon({ movie }) {
 }
 
 export function AddToMustWatchIcon({ movie }) {
-  const context = useContext(MoviesContext);
+  const ctx = useContext(context.Movies);
 
   const handleAddToMustWatch = (e) => {
     e.preventDefault();
-    context.addMustWatch(movie);
+    ctx.addMustWatch(movie);
   };
   return (
     <ui.IconButton
@@ -59,11 +59,11 @@ export function AddToMustWatchIcon({ movie }) {
 }
 
 export function RemoveFromFavoritesIcon({ movie }) {
-  const context = useContext(MoviesContext);
+  const ctx = useContext(context.Movies);
 
   const handleRemoveFromFavorites = (e) => {
     e.preventDefault();
-    context.removeFromFavorites(movie);
+    ctx.removeFromFavorites(movie);
   };
   return (
     <ui.IconButton
@@ -82,7 +82,10 @@ const formControl = {
 };
 
 export function FilterMoviesCard(props) {
-  const { data, error, isLoading, isError } = useQuery("genres", getGenres);
+  const { data, error, isLoading, isError } = useQuery(
+    "genres",
+    endpoints.getGenres,
+  );
 
   if (isLoading) {
     return <Spinner />;
@@ -224,7 +227,7 @@ function Header(props) {
 }
 
 function MovieCard({ movie, action }) {
-  const { favorites } = useContext(MoviesContext);
+  const { favorites } = useContext(context.Movies);
 
   if (favorites.find((id) => id === movie.id)) {
     movie.favorite = true;
@@ -409,7 +412,7 @@ export function MovieReview({ review }) {
 export function MovieReviews({ movie }) {
   const { data, error, isLoading, isError } = useQuery(
     ["reviews", { id: movie.id }],
-    getMovieReviews,
+    endpoints.getMovieReviews,
   );
 
   if (isLoading) {
@@ -509,7 +512,7 @@ const styles = {
 };
 
 export function ReviewForm({ movie }) {
-  const context = useContext(MoviesContext);
+  const ctx = useContext(context.Movies);
 
   const [rating, setRating] = useState(3);
   const [open, setOpen] = useState(false);
@@ -541,7 +544,7 @@ export function ReviewForm({ movie }) {
   const onSubmit = (review) => {
     review.movieId = movie.id;
     review.rating = rating;
-    context.addReview(movie, review);
+    ctx.addReview(movie, review);
     setOpen(true);
   };
 
@@ -678,7 +681,7 @@ export function ReviewForm({ movie }) {
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 export function SiteHeader() {
-  const context = useContext(AuthContext);
+  const ctx = useContext(context.Auth);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -694,8 +697,8 @@ export function SiteHeader() {
     { label: "Trending", path: "/movies/trending" },
     { label: "Top Rated", path: "/movies/top_rated" },
   ];
-  console.log(`Authed: ${context.isAuthenticated}`);
-  if (context.isAuthenticated) {
+  console.log(`Authed: ${ctx.isAuthenticated}`);
+  if (ctx.isAuthenticated) {
     menuOptions.push({ label: "Log out", path: "/" });
   } else {
     menuOptions.push(
@@ -712,7 +715,7 @@ export function SiteHeader() {
     setAnchorEl(event.currentTarget);
   };
 
-  const username = context.isAuthenticated ? context.userName : "guest";
+  const username = ctx.isAuthenticated ? ctx.userName : "guest";
 
   return (
     <>
@@ -885,7 +888,7 @@ export function MovieListPage({
 export function MovieDetailsPage({ movie, children }) {
   const { data, error, isLoading, isError } = useQuery(
     ["images", { id: movie.id }],
-    getMovieImages,
+    endpoints.getMovieImages,
   );
 
   if (isLoading) {

@@ -4,7 +4,7 @@ import * as icons from "@mui/icons-material";
 import { Link, useParams, useLocation, Navigate } from "react-router-dom";
 import { useQuery, useQueries } from "react-query";
 
-import { AuthContext, MoviesContext } from "./contexts.js";
+import * as context from "./contexts.js";
 import * as endpoints from "./endpoints.js";
 import * as comp from "./components.js";
 import img from "./images/film-poster-placeholder.png";
@@ -123,7 +123,7 @@ export function MovieCredits() {
 }
 
 export function FavoriteMovies() {
-  const { favorites: movieIds } = useContext(MoviesContext);
+  const { favorites: movieIds } = useContext(context.Movies);
 
   // Create an array of queries and run in parallel.
   const favoriteMovieQueries = useQueries(
@@ -193,22 +193,19 @@ export function Home() {
 }
 
 export function LogIn() {
-  const context = useContext(AuthContext);
+  const ctx = useContext(context.Auth);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
   const login = async () => {
-    const { success = false, msg } = await context.authenticate(
-      username,
-      password,
-    );
+    const { success = false, msg } = await ctx.authenticate(username, password);
     if (!success) {
       setError(msg);
     }
   };
 
-  if (context.isAuthenticated) {
+  if (ctx.isAuthenticated) {
     return <Navigate to="/" />;
   }
 
@@ -363,7 +360,7 @@ export function Person() {
 }
 
 export function SignUp() {
-  const context = useContext(AuthContext);
+  const ctx = useContext(context.Auth);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
@@ -387,7 +384,7 @@ export function SignUp() {
       return;
     }
 
-    const { success = false, msg } = await context.register(username, password);
+    const { success = false, msg } = await ctx.register(username, password);
     if (success) {
       setRegistered(true);
     } else {

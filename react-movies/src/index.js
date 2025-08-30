@@ -5,7 +5,7 @@ import * as pages from "./pages.js";
 import { SiteHeader } from "./components.js";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { MoviesContextProvider, AuthContextProvider } from "./contexts.js";
+import * as context from "./contexts.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,9 +21,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthContextProvider>
+        <context.AuthProvider>
           <SiteHeader />
-          <MoviesContextProvider>
+          <context.MoviesProvider>
             <Routes>
               <Route
                 path="/movies/favorites"
@@ -54,8 +54,8 @@ const App = () => {
               <Route path="/" element={<pages.Home />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
-          </MoviesContextProvider>
-        </AuthContextProvider>
+          </context.MoviesProvider>
+        </context.AuthProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

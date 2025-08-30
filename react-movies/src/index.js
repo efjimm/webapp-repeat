@@ -1,23 +1,11 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Navigate, Routes } from "react-router-dom";
-import HomePage from "./pages/homePage";
-import MoviePage from "./pages/movieDetailsPage";
-import FavoriteMoviesPage from "./pages/favoriteMoviesPage";
-import UpcomingMoviesPage from "./pages/upcomingMoviesPage";
-import TrendingMoviesPage from "./pages/trending";
-import TopRatedMoviesPage from "./pages/topRated";
-import MovieReviewPage from "./pages/movieReviewPage";
-import SiteHeader from "./components/siteHeader";
+import * as pages from "./pages.js";
+import { SiteHeader } from "./components.js";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import MoviesContextProvider from "./contexts/moviesContext";
-import AddMovieReviewPage from "./pages/addMovieReviewPage";
-import CreditsPage from "./pages/credits";
-import PersonPage from "./pages/person";
-import SignUpPage from "./pages/signUp";
-import LoginPage from "./pages/login";
-import AuthContextProvider from "./contexts/authContext";
+import { MoviesContextProvider, AuthContextProvider } from "./contexts.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,22 +27,31 @@ const App = () => {
             <Routes>
               <Route
                 path="/movies/favorites"
-                element={<FavoriteMoviesPage />}
+                element={<pages.FavoriteMovies />}
               />
-              <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
-              <Route path="/movies/trending" element={<TrendingMoviesPage />} />
+              <Route
+                path="/movies/upcoming"
+                element={<pages.UpcomingMovies />}
+              />
+              <Route
+                path="/movies/trending"
+                element={<pages.TrendingMovies />}
+              />
               <Route
                 path="/movies/top_rated"
-                element={<TopRatedMoviesPage />}
+                element={<pages.TopRatedMovies />}
               />
-              <Route path="/reviews/:id" element={<MovieReviewPage />} />
-              <Route path="/movies/:id" element={<MoviePage />} />
-              <Route path="/movies/:id/credits" element={<CreditsPage />} />
-              <Route path="/person/:id" element={<PersonPage />} />
-              <Route path="/reviews/form" element={<AddMovieReviewPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/" element={<HomePage />} />
+              <Route path="/reviews/:id" element={<pages.MovieReview />} />
+              <Route path="/movies/:id" element={<pages.MovieDetails />} />
+              <Route
+                path="/movies/:id/credits"
+                element={<pages.MovieCredits />}
+              />
+              <Route path="/person/:id" element={<pages.Person />} />
+              <Route path="/reviews/form" element={<pages.ReviewForm />} />
+              <Route path="/signup" element={<pages.SignUp />} />
+              <Route path="/login" element={<pages.LogIn />} />
+              <Route path="/" element={<pages.Home />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </MoviesContextProvider>

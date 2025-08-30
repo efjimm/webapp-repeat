@@ -59,7 +59,8 @@ export function getTrendingMovies() {
   return fetchJson(`http://localhost:8080/api/movies/trending`);
 }
 
-export function getTopRatedMovies(page) {
+export function getTopRatedMovies(args) {
+  const page = args.queryKey[1].page;
   return fetchJson(`http://localhost:8080/api/movies/top_rated?page=${page}`);
 }
 
@@ -78,13 +79,13 @@ export function getGenres() {
   return fetchJson(`http://localhost:8080/api/movies/genres`);
 }
 
-export function getMovieImages({ queryKey }) {
-  const id = queryKey[1].id;
+export function getMovieImages(args) {
+  const id = args.queryKey[1].id;
   return fetchJson(`http://localhost:8080/api/movies/${id}/images`);
 }
 
-export function getMovieReviews({ queryKey }) {
-  const id = queryKey[1].id;
+export function getMovieReviews(args) {
+  const id = args.queryKey[1].id;
   return fetchJson(`http://localhost:8080/api/movies/${id}/reviews`);
 }
 

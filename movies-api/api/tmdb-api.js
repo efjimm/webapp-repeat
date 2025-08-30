@@ -54,12 +54,11 @@ export function getMovieCredits(args) {
   );
 }
 
-export function getMovie(args) {
-  const [, idPart] = args.queryKey;
-  const { id } = idPart;
-  return fetchJsonData(
+export async function getMovie(id) {
+  const response = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}`,
   );
+  return await response.json();
 }
 
 export function getGenres() {

@@ -13,6 +13,14 @@ function fetchJsonData(url) {
     });
 }
 
+async function fetch2(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) throw new Error();
+
+  return await response.json();
+}
+
 export const login = async (username, password) => {
   const response = await fetch("http://localhost:8080/api/users", {
     headers: {
@@ -86,12 +94,10 @@ export function getMovieCredits(args) {
   );
 }
 
-export function getMovie(args) {
+export async function getMovie(args) {
   const [, idPart] = args.queryKey;
   const { id } = idPart;
-  return fetchJsonData(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}`,
-  );
+  return fetch2(`http://localhost:8080/api/movies/${id}`);
 }
 
 export function getGenres() {

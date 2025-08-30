@@ -21,43 +21,35 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <context.AuthProvider>
+        <context.AppProvider>
           <SiteHeader />
-          <context.MoviesProvider>
-            <Routes>
-              <Route element={<ProtectedRoutes />}>
-                <Route
-                  path="/movies/favorites"
-                  element={<pages.FavoriteMovies />}
-                />
-              </Route>
+          <Routes>
+            <Route element={<ProtectedRoutes />}>
               <Route
-                path="/movies/upcoming"
-                element={<pages.UpcomingMovies />}
+                path="/movies/favorites"
+                element={<pages.FavoriteMovies />}
               />
-              <Route
-                path="/movies/trending"
-                element={<pages.TrendingMovies />}
-              />
-              <Route
-                path="/movies/top_rated"
-                element={<pages.TopRatedMovies />}
-              />
-              <Route path="/reviews/:id" element={<pages.MovieReview />} />
-              <Route path="/movies/:id" element={<pages.MovieDetails />} />
-              <Route
-                path="/movies/:id/credits"
-                element={<pages.MovieCredits />}
-              />
-              <Route path="/person/:id" element={<pages.Person />} />
-              <Route path="/reviews/form" element={<pages.ReviewForm />} />
-              <Route path="/signup" element={<pages.SignUp />} />
-              <Route path="/login" element={<pages.LogIn />} />
-              <Route path="/" element={<pages.Home />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </context.MoviesProvider>
-        </context.AuthProvider>
+            </Route>
+            <Route path="/movies/upcoming" element={<pages.UpcomingMovies />} />
+            <Route path="/movies/trending" element={<pages.TrendingMovies />} />
+            <Route
+              path="/movies/top_rated"
+              element={<pages.TopRatedMovies />}
+            />
+            <Route path="/reviews/:id" element={<pages.MovieReview />} />
+            <Route path="/movies/:id" element={<pages.MovieDetails />} />
+            <Route
+              path="/movies/:id/credits"
+              element={<pages.MovieCredits />}
+            />
+            <Route path="/person/:id" element={<pages.Person />} />
+            <Route path="/reviews/form" element={<pages.ReviewForm />} />
+            <Route path="/signup" element={<pages.SignUp />} />
+            <Route path="/login" element={<pages.LogIn />} />
+            <Route path="/" element={<pages.Home />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </context.AppProvider>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

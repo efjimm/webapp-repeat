@@ -92,3 +92,48 @@ export function getMovieReviews(args) {
 export function getUpcomingMovies() {
   return fetchJson(`http://localhost:8080/api/movies/upcoming`);
 }
+
+export async function putFavorites(username, ids) {
+  const response = await fetch(
+    `http://localhost:8080/api/favorites/${username}`,
+    {
+      headers: {
+        Authorization: window.localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+      method: "put",
+      body: JSON.stringify([ids].flat()),
+    },
+  );
+
+  if (!response.ok) throw new Error();
+
+  return await response.json();
+}
+
+export async function deleteFavourites(username, ids) {
+  const response = await fetch(
+    `http://localhost:8080/api/favorites/${username}`,
+    {
+      headers: {
+        Authorization: window.localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+      method: "delete",
+      body: JSON.stringify([ids].flat()),
+    },
+  );
+
+  if (!response.ok) throw new Error();
+
+  return await response.json();
+}
+
+export function getFavorites(username) {
+  console.log(`Get favorites of '${username}'`);
+  return fetchJson(`http://localhost:8080/api/favorites/${username}`, {
+    headers: {
+      Authorization: window.localStorage.getItem("token"),
+    },
+  });
+}

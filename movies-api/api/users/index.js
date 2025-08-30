@@ -51,7 +51,11 @@ router.put("/:id", async (req, res) => {
 });
 
 async function registerUser(req, res) {
-  // Add input validation logic here
+  const user = await User.findByUserName(req.body.username);
+  if (user) {
+    return res.status(409).json({ success: false, msg: "User already exists" });
+  }
+
   await User.create(req.body);
   res.status(201).json({ success: true, msg: "User successfully created." });
 }

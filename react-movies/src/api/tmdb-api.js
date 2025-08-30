@@ -13,11 +13,43 @@ function fetchJsonData(url) {
     });
 }
 
-export function getMovies(page) {
-  console.log(`Fetch page ${page}`);
-  return fetchJsonData(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&page=${page}&language=en-US&include_adult=false&include_video=false`,
+export const login = async (username, password) => {
+  const response = await fetch("http://localhost:8080/api/users", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "post",
+    body: JSON.stringify({ username: username, password: password }),
+  });
+  return response.json();
+};
+
+export const signup = async (username, password) => {
+  const response = await fetch(
+    "http://localhost:8080/api/users?action=register",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "post",
+      body: JSON.stringify({ username: username, password: password }),
+    },
   );
+  return response.json();
+};
+
+export async function getMovies(args) {
+  const page = args.queryKey[1].page;
+  const response = await fetch(
+    `http://localhost:8080/api/movies?page=${page}`,
+    // {
+    //   headers: {
+    //     Authorization: window.localStorage.getItem("token"),
+    //   },
+    // },
+  );
+  console.log(response);
+  return response.json();
 }
 
 export function getPersonMovies(args) {

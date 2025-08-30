@@ -64,10 +64,10 @@ router.get(
 );
 
 router.get(
-  "/tmdb/genres",
+  "/genres",
   asyncHandler(async (req, res) => {
-    const upcomingMovies = await getGenres();
-    res.status(200).json(upcomingMovies);
+    const genres = await getGenres();
+    res.status(200).json(genres);
   }),
 );
 

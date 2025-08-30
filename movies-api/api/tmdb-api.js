@@ -55,20 +55,20 @@ export function getTopRatedMovies(args) {
   );
 }
 
-export async function getMovieCredits(id) {
+export function getMovieCredits(id) {
   return fetch2(
     `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
 }
 
-export async function getMovie(id) {
+export function getMovie(id) {
   return fetch2(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}`,
   );
 }
 
 export function getGenres() {
-  return fetchJsonData(
+  return fetch2(
     "https://api.themoviedb.org/3/genre/movie/list?api_key=" +
       process.env.REACT_APP_TMDB_KEY +
       "&language=en-US",

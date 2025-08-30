@@ -99,11 +99,7 @@ export function getMovie(args) {
 }
 
 export function getGenres() {
-  return fetchJsonData(
-    "https://api.themoviedb.org/3/genre/movie/list?api_key=" +
-      process.env.REACT_APP_TMDB_KEY +
-      "&language=en-US",
-  );
+  return fetch2(`http://localhost:8080/api/movies/genres`);
 }
 
 export function getMovieImages({ queryKey }) {

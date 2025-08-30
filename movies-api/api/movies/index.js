@@ -7,6 +7,7 @@ import {
   getUpcomingMovies,
   getGenres,
   getMovieCredits,
+  getMovieImages,
 } from "../tmdb-api";
 
 const router = express.Router();
@@ -47,6 +48,20 @@ router.get(
     const id = parseInt(req.params.id);
     try {
       const credits = await getMovieCredits(id);
+      res.status(200).json(credits);
+    } catch (error) {
+      console.error("Error fetching credits:", error);
+      res.status(500).json({ error: "Failed to fetch credits" });
+    }
+  }),
+);
+
+router.get(
+  "/:id/images",
+  asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+      const credits = await getMovieImages(id);
       res.status(200).json(credits);
     } catch (error) {
       console.error("Error fetching credits:", error);

@@ -103,11 +103,8 @@ export function getGenres() {
 }
 
 export function getMovieImages({ queryKey }) {
-  const [, idPart] = queryKey;
-  const { id } = idPart;
-  return fetchJsonData(
-    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${process.env.REACT_APP_TMDB_KEY}`,
-  );
+  const id = queryKey[1].id;
+  return fetch2(`http://localhost:8080/api/movies/${id}/images`);
 }
 
 export function getMovieReviews({ queryKey }) {

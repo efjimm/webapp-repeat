@@ -75,10 +75,8 @@ export function getGenres() {
   );
 }
 
-export function getMovieImages({ queryKey }) {
-  const [, idPart] = queryKey;
-  const { id } = idPart;
-  return fetchJsonData(
+export function getMovieImages(id) {
+  return fetch2(
     `https://api.themoviedb.org/3/movie/${id}/images?api_key=${process.env.REACT_APP_TMDB_KEY}`,
   );
 }

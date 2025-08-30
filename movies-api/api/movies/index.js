@@ -8,9 +8,24 @@ import {
   getGenres,
   getMovieCredits,
   getMovieImages,
+  getMovieReviews,
 } from "../tmdb-api";
 
 const router = express.Router();
+
+function movieDataRoute(fetchFn, name) {
+  return asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+
+    try {
+      const data = await fetchFn(id);
+      res.status(200).json(data);
+    } catch (error) {
+      console.error(`Error fetching ${name}:`, error);
+      res.status(500).json({ error: `Failed to fetch ${name}` });
+    }
+  });
+}
 
 router.get(
   "/",
@@ -28,47 +43,10 @@ router.get(
   }),
 );
 
-router.get(
-  "/:id/details",
-  asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id);
-    try {
-      const movie = await getMovie(id);
-      res.status(200).json(movie);
-    } catch (error) {
-      console.error("Error fetching movie:", error);
-      res.status(500).json({ error: "Failed to fetch movie" });
-    }
-  }),
-);
-
-router.get(
-  "/:id/credits",
-  asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id);
-    try {
-      const credits = await getMovieCredits(id);
-      res.status(200).json(credits);
-    } catch (error) {
-      console.error("Error fetching credits:", error);
-      res.status(500).json({ error: "Failed to fetch credits" });
-    }
-  }),
-);
-
-router.get(
-  "/:id/images",
-  asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id);
-    try {
-      const credits = await getMovieImages(id);
-      res.status(200).json(credits);
-    } catch (error) {
-      console.error("Error fetching credits:", error);
-      res.status(500).json({ error: "Failed to fetch credits" });
-    }
-  }),
-);
+router.get("/:id/details", movieDataRoute(getMovie, "details"));
+router.get("/:id/credits", movieDataRoute(getMovieCredits, "credits"));
+router.get("/:id/images", movieDataRoute(getMovieImages, "images"));
+router.get("/:id/reviews", movieDataRoute(getMovieReviews, "reviews"));
 
 router.get(
   "/tmdb/upcoming",

@@ -13,15 +13,13 @@ export function getMovies(page) {
   );
 }
 
-export function getPersonMovies(args) {
-  const id = args.queryKey[1].id;
+export function getPersonMovies(id) {
   return fetchJson(
     `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
 }
 
-export function getPerson(args) {
-  const id = args.queryKey[1].id;
+export function getPerson(id) {
   return fetchJson(
     `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
   );
@@ -33,8 +31,7 @@ export function getTrendingMovies() {
   );
 }
 
-export function getTopRatedMovies(args) {
-  const page = args.queryKey[1].page;
+export function getTopRatedMovies(page) {
   return fetchJson(
     `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&page=${page}`,
   );

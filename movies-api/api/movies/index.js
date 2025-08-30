@@ -9,6 +9,8 @@ import {
   getMovieCredits,
   getMovieImages,
   getMovieReviews,
+  getPersonMovies,
+  getPerson,
 } from "../tmdb-api";
 
 const router = express.Router();
@@ -47,6 +49,24 @@ router.get("/:id/reviews", movieDataRoute(getMovieReviews, "reviews"));
 
 router.get("/upcoming", simpleRoute(getUpcomingMovies, "upcoming movies"));
 router.get("/genres", simpleRoute(getGenres, "genres"));
+
+router.get(
+  "/person/:id",
+  asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    const errMsg = `Failed to fetch movies for person ${id}`;
+    doFetch(res, getPersonMovies, errMsg, id);
+  }),
+);
+
+router.get(
+  "/person/:id/details",
+  asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    const errMsg = `Failed to fetch details for person ${id}`;
+    doFetch(res, getPerson, errMsg, id);
+  }),
+);
 
 router.get(
   "/",

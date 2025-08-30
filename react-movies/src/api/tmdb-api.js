@@ -47,16 +47,12 @@ export async function getMovies(args) {
 
 export function getPersonMovies(args) {
   const id = args.queryKey[1].id;
-  return fetchJson(
-    `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
-  );
+  return fetchJson(`http://localhost:8080/api/movies/person/${id}`);
 }
 
 export function getPerson(args) {
   const id = args.queryKey[1].id;
-  return fetchJson(
-    `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US`,
-  );
+  return fetchJson(`http://localhost:8080/api/movies/person/${id}/details`);
 }
 
 export function getTrendingMovies() {

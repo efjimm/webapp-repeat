@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 const router = express.Router(); // eslint-disable-line
 
 // Get all users
-router.get("/", async (req, res) => {
+router.get("/", async (_, res) => {
   const users = await User.find();
   res.status(200).json(users);
 });

@@ -72,5 +72,15 @@ MovieSchema.statics.findByMovieDBId = function (id) {
   return this.findOne({ id: id });
 };
 
+const FavoritesSchema = new Schema({
+  username: { type: String, unique: true, required: true },
+  movies: [{ type: Number }],
+});
+
+FavoritesSchema.statics.findByUsername = function (username) {
+  return this.findOne({ username: username });
+};
+
 export const movieModel = mongoose.model("Movies", MovieSchema);
 export const userModel = mongoose.model("User", UserSchema);
+export const favoritesModel = mongoose.model("Favorites", FavoritesSchema);

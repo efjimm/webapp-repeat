@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 import usersRouter from "./users.js";
 import moviesRouter from "./moviesRouter.js";
+import favoritesRouter from "./favorites.js";
 // import authenticate from "./auth.js";
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use("/api/users", usersRouter);
 
 // No auth for now
 app.use("/api/movies", moviesRouter);
+app.use("/api/favorites", favoritesRouter);
 // app.use("/api/movies", authenticate, moviesRouter);
 
 app.use(defaultErrHandler);

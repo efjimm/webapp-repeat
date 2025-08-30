@@ -1,10 +1,18 @@
 import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
-import users from "./users";
-import movies from "./movies";
-import User from "../src/users/userModel";
-import Movie from "../src/movies/movieModel";
+import { userModel as User, favoritesModel } from "../src/models.js";
+
+const users = [
+  {
+    username: "user1",
+    password: "test123@",
+  },
+  {
+    username: "user2",
+    password: "test456@",
+  },
+];
 
 async function main() {
   if (process.env.NODE_ENV !== "development") {
@@ -16,14 +24,20 @@ async function main() {
   await User.collection
     .drop()
     .catch((err) => console.log("User collection not found"));
-  await Movie.collection
+  await favoritesModel.collection
     .drop()
-    .catch((err) => console.log("Movie collection not found"));
+    .catch((err) => console.log("Favorites collection not found"));
   await User.create(users);
-  await Movie.create(movies);
+  await favoritesModel.create(
+    users.map((u) => {
+      return {
+        username: u.username,
+        movies: [],
+      };
+    }),
+  );
   console.log("Database initialised");
   console.log(`${users.length} users loaded`);
-  console.log(`${movies.length} movies loaded`);
   await mongoose.disconnect();
 }
 

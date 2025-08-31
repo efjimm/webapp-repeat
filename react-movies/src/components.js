@@ -188,6 +188,10 @@ export function FilterMoviesCard(props) {
     handleChange(e, "sort", e.target.value);
   };
 
+  const handleSortDirectionChange = (e) => {
+    handleChange(e, "sortDirection", e.target.value);
+  };
+
   return (
     <ui.Card
       sx={{
@@ -242,8 +246,20 @@ export function FilterMoviesCard(props) {
             <ui.MenuItem value="rating">Rating</ui.MenuItem>
           </ui.Select>
         </ui.FormControl>
+        <ui.FormControl sx={{ ...formControl }}>
+          <ui.InputLabel id="sortdir-label">Sort Direction</ui.InputLabel>
+          <ui.Select
+            labelId="sortdir-label"
+            id="sortdir-select"
+            defaultValue="0"
+            value={props.sortDirection}
+            onChange={handleSortDirectionChange}
+          >
+            <ui.MenuItem value="0">Descending</ui.MenuItem>
+            <ui.MenuItem value="1">Ascending</ui.MenuItem>
+          </ui.Select>
+        </ui.FormControl>
       </ui.CardContent>
-      <ui.CardMedia sx={{ height: 300 }} image={filterImg} title="Filter" />
       <ui.CardContent>
         <ui.Typography variant="h5" component="h1">
           <icons.Search fontSize="large" />
@@ -930,6 +946,7 @@ export function MovieListPage({
   const [nameFilter, setNameFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("0");
   const [sort, setSort] = useState("none");
+  const [sortDirection, setSortDirection] = useState("0");
   const genreId = Number(genreFilter);
 
   const sortFunctions = {
@@ -944,13 +961,15 @@ export function MovieListPage({
 
   const sortFn = sortFunctions[sort] || (() => 0);
 
-  let displayedMovies = movies
+  const displayedMovies = movies
     .filter(
       (m) => m.title.toLowerCase().search(nameFilter.toLowerCase()) !== -1,
     )
     .filter((m) => genreId <= 0 || m.genre_ids.includes(genreId))
     .sort(sortFn);
   console.log(movies[0]);
+
+  if (Number(sortDirection) !== 0) displayedMovies.reverse();
 
   const handleChange = (type, value) => {
     switch (type) {
@@ -962,6 +981,9 @@ export function MovieListPage({
         break;
       case "sort":
         setSort(value);
+        break;
+      case "sortDirection":
+        setSortDirection(value);
         break;
     }
   };

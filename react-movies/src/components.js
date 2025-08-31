@@ -810,7 +810,9 @@ export function SiteHeader() {
     setAnchorEl(event.currentTarget);
   };
 
-  const username = ctx.isAuthenticated ? ctx.userName : "guest";
+  const loginMsg = ctx.isAuthenticated
+    ? `Logged in as ${ctx.userName}`
+    : "Logged out";
 
   return (
     <>
@@ -820,7 +822,7 @@ export function SiteHeader() {
             TMDB Client
           </ui.Typography>
           <ui.Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Logged in as {username}
+            {loginMsg}
           </ui.Typography>
           {isMobile ? (
             <>

@@ -45,30 +45,63 @@ export function WriteReviewIcon({ movie }) {
 
 export function AddToFavoritesIcon({ movie }) {
   const ctx = useContext(context.Movies);
+  const authCtx = useContext(context.Auth);
+  const navigate = useNavigate();
+
+  if (movie.favorite) {
+    return (
+      <ui.IconButton>
+        <icons.Favorite fontSize="large" sx={{ color: "red" }} />
+      </ui.IconButton>
+    );
+  }
 
   const handleAddToFavorites = (e) => {
     e.preventDefault();
+    if (!authCtx.isAuthenticated) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
     ctx.addToFavorites(movie);
   };
 
   return (
     <ui.IconButton aria-label="add to favorites" onClick={handleAddToFavorites}>
-      <icons.Favorite color="primary" fontSize="large" />
+      <icons.FavoriteBorder color="primary" fontSize="large" />
     </ui.IconButton>
   );
 }
 
-export function AddToMustWatchIcon({ movie }) {
+export function AddToWatchlistIcon({ movie }) {
   const ctx = useContext(context.Movies);
+  const authCtx = useContext(context.Auth);
+  const navigate = useNavigate();
 
-  const handleAddToMustWatch = (e) => {
+  if (movie.watchlist) {
+    // This is wrapped in a button just so it's the same size as before, the button
+    // doesn't actually do anything.
+    return (
+      <ui.IconButton>
+        <icons.PlaylistAddCheck fontSize="large" sx={{ color: "green" }} />
+      </ui.IconButton>
+    );
+  }
+
+  const handleAddToWatchlist = (e) => {
     e.preventDefault();
-    ctx.addMustWatch(movie);
+    if (!authCtx.isAuthenticated) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    ctx.addToWatchlist(movie);
   };
+
   return (
     <ui.IconButton
       aria-label="Add to must watch"
-      onClick={handleAddToMustWatch}
+      onClick={handleAddToWatchlist}
     >
       <icons.PlaylistAdd color="primary" fontSize="large" />
     </ui.IconButton>
@@ -86,6 +119,23 @@ export function RemoveFromFavoritesIcon({ movie }) {
     <ui.IconButton
       aria-label="remove from favorites"
       onClick={handleRemoveFromFavorites}
+    >
+      <icons.Delete color="primary" fontSize="large" />
+    </ui.IconButton>
+  );
+}
+
+export function RemoveFromWatchlistIcon({ movie }) {
+  const ctx = useContext(context.Movies);
+
+  const handleRemoveFromWatchlist = (e) => {
+    e.preventDefault();
+    ctx.removeFromWatchlist(movie);
+  };
+  return (
+    <ui.IconButton
+      aria-label="remove from watchlist"
+      onClick={handleRemoveFromWatchlist}
     >
       <icons.Delete color="primary" fontSize="large" />
     </ui.IconButton>
@@ -244,24 +294,14 @@ function Header(props) {
 }
 
 function MovieCard({ movie, action }) {
-  const { favorites } = useContext(context.Movies);
+  const { favorites, watchlist } = useContext(context.Movies);
 
-  if (favorites.find((id) => id === movie.id)) {
-    movie.favorite = true;
-  } else {
-    movie.favorite = false;
-  }
+  movie.favorite = favorites.includes(movie.id);
+  movie.watchlist = watchlist.includes(movie.id);
 
   return (
     <ui.Card>
       <ui.CardHeader
-        avatar={
-          movie.favorite ? (
-            <ui.Avatar sx={{ backgroundColor: "red" }}>
-              <icons.Favorite />
-            </ui.Avatar>
-          ) : null
-        }
         title={
           <ui.Typography variant="h5" component="p">
             {movie.title}{" "}
@@ -710,6 +750,7 @@ export function SiteHeader() {
   const menuOptions = [
     { label: "Home", path: "/" },
     { label: "Favorites", path: "/movies/favorites" },
+    { label: "Watchlist", path: "/movies/watchlist" },
     { label: "Upcoming", path: "/movies/upcoming" },
     { label: "Trending", path: "/movies/trending" },
     { label: "Top Rated", path: "/movies/top_rated" },

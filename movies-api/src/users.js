@@ -2,7 +2,7 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 
-import { userModel, favoritesModel } from "./models.js";
+import { userModel, favoritesModel, watchlistModel } from "./models.js";
 
 const router = express.Router(); // eslint-disable-line
 
@@ -59,6 +59,10 @@ async function registerUser(req, res) {
 
   await userModel.create(req.body);
   await favoritesModel.create({
+    username: req.body.username,
+    movies: [],
+  });
+  await watchlistModel.create({
     username: req.body.username,
     movies: [],
   });

@@ -1,5 +1,5 @@
-async function fetchJson(url) {
-  const response = await fetch(url);
+async function fetchJson(url, opts) {
+  const response = await fetch(url, opts);
 
   if (!response.ok) throw new Error();
 
@@ -130,8 +130,50 @@ export async function deleteFavourites(username, ids) {
 }
 
 export function getFavorites(username) {
-  console.log(`Get favorites of '${username}'`);
   return fetchJson(`http://localhost:8080/api/favorites/${username}`, {
+    headers: {
+      Authorization: window.localStorage.getItem("token"),
+    },
+  });
+}
+export async function putWatchlist(username, ids) {
+  const response = await fetch(
+    `http://localhost:8080/api/watchlist/${username}`,
+    {
+      headers: {
+        Authorization: window.localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+      method: "put",
+      body: JSON.stringify([ids].flat()),
+    },
+  );
+
+  if (!response.ok) throw new Error();
+
+  return await response.json();
+}
+
+export async function deleteWatchlist(username, ids) {
+  const response = await fetch(
+    `http://localhost:8080/api/watchlist/${username}`,
+    {
+      headers: {
+        Authorization: window.localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+      method: "delete",
+      body: JSON.stringify([ids].flat()),
+    },
+  );
+
+  if (!response.ok) throw new Error();
+
+  return await response.json();
+}
+
+export function getWatchlist(username) {
+  return fetchJson(`http://localhost:8080/api/watchlist/${username}`, {
     headers: {
       Authorization: window.localStorage.getItem("token"),
     },

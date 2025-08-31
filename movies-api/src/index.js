@@ -6,7 +6,8 @@ import mongoose from "mongoose";
 import usersRouter from "./users.js";
 import moviesRouter from "./moviesRouter.js";
 import favoritesRouter from "./favorites.js";
-// import authenticate from "./auth.js";
+import watchlistRouter from "./watchlist.js";
+import authenticate from "./auth.js";
 
 dotenv.config();
 
@@ -31,10 +32,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/users", usersRouter);
 
-// No auth for now
 app.use("/api/movies", moviesRouter);
-app.use("/api/favorites", favoritesRouter);
-// app.use("/api/movies", authenticate, moviesRouter);
+app.use("/api/favorites", authenticate, favoritesRouter);
+app.use("/api/watchlist", authenticate, watchlistRouter);
 
 app.use(defaultErrHandler);
 

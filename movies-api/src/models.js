@@ -84,3 +84,4 @@ FavoritesSchema.statics.findByUsername = function (username) {
 export const movieModel = mongoose.model("Movies", MovieSchema);
 export const userModel = mongoose.model("User", UserSchema);
 export const favoritesModel = mongoose.model("Favorites", FavoritesSchema);
+export const watchlistModel = mongoose.model("Watchlist", FavoritesSchema);

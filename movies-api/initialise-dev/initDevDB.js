@@ -1,7 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
-import { userModel as User, favoritesModel } from "../src/models.js";
+import {
+  userModel as User,
+  favoritesModel,
+  watchlistModel,
+} from "../src/models.js";
 
 const users = [
   {
@@ -23,19 +27,22 @@ async function main() {
   // Drop collections
   await User.collection
     .drop()
-    .catch((err) => console.log("User collection not found"));
+    .catch(() => console.log("User collection not found"));
   await favoritesModel.collection
     .drop()
-    .catch((err) => console.log("Favorites collection not found"));
+    .catch(() => console.log("Favorites collection not found"));
+  await watchlistModel.collection
+    .drop()
+    .catch(() => console.log("Watchlist collection not found"));
+  const lists = users.map((u) => {
+    return {
+      username: u.username,
+      movies: [],
+    };
+  });
   await User.create(users);
-  await favoritesModel.create(
-    users.map((u) => {
-      return {
-        username: u.username,
-        movies: [],
-      };
-    }),
-  );
+  await favoritesModel.create(lists);
+  await watchlistModel.create(lists);
   console.log("Database initialised");
   console.log(`${users.length} users loaded`);
   await mongoose.disconnect();

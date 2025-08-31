@@ -13,49 +13,79 @@ export function AppProvider(props) {
 
   const [favorites, setFavorites] = useState([]);
   const [myReviews, setMyReviews] = useState({});
-  const [mustWatch, setMustWatch] = useState([]);
+  const [watchlist, setWatchlist] = useState([]);
 
-  const addToFavorites = async (movie) => {
-    if (!isAuthenticated) {
-      console.log("Not authed");
-      return;
-    }
+  const initMovieList = async (setList, endpointGetFn) => {
+    if (!isAuthenticated) return;
+    const movies = await endpointGetFn(userName);
+    setList(movies);
+  };
 
-    let newFavorites = [];
-    if (!favorites.includes(movie.id)) {
-      newFavorites = [...favorites, movie.id];
-      await endpoints.putFavorites(userName, movie.id);
+  const addToMovieList = async (movie, list, setList, endpointPutFn) => {
+    if (!isAuthenticated) return;
+    let newList = [];
+    if (!list.includes(movie.id)) {
+      newList = [...list, movie.id];
+      await endpointPutFn(userName, movie.id);
     } else {
-      newFavorites = [...favorites];
+      newList = [...list];
     }
-    setFavorites(newFavorites);
+    setList(newList);
   };
 
-  const removeFromFavorites = async (movie) => {
+  const removeFromMovieList = async (
+    movie,
+    list,
+    setList,
+    endpointDeleteFn,
+  ) => {
     if (!isAuthenticated) return;
-    await endpoints.deleteFavourites(userName, movie.id);
-    setFavorites(favorites.filter((mId) => mId !== movie.id));
-  };
-  const addReview = (movie, review) => {
-    if (!isAuthenticated) return;
-    setMyReviews({ ...myReviews, [movie.id]: review });
+    await endpointDeleteFn(userName, movie.id);
+    setList(list.filter((mId) => mId !== movie.id));
   };
 
   const initFavorites = async () => {
-    if (!isAuthenticated) return;
-    const movies = await endpoints.getFavorites(userName);
-    setFavorites(movies);
+    initMovieList(setFavorites, endpoints.getFavorites);
   };
 
-  const addMustWatch = (movie) => {
-    let newMustWatch = [];
-    if (!mustWatch.includes(movie.id)) {
-      newMustWatch = [...mustWatch, movie.id];
-    } else {
-      newMustWatch = [...mustWatch];
-    }
-    setMustWatch(newMustWatch);
-    console.log(newMustWatch);
+  const addToFavorites = async (movie) => {
+    addToMovieList(movie, favorites, setFavorites, endpoints.putFavorites);
+  };
+
+  const removeFromFavorites = async (movie) => {
+    removeFromMovieList(
+      movie,
+      favorites,
+      setFavorites,
+      endpoints.deleteFavourites,
+    );
+  };
+
+  const initWatchlist = async () => {
+    initMovieList(setWatchlist, endpoints.getWatchlist);
+  };
+
+  const addToWatchlist = async (movie) => {
+    await addToMovieList(
+      movie,
+      watchlist,
+      setWatchlist,
+      endpoints.putWatchlist,
+    );
+  };
+
+  const removeFromWatchlist = async (movie) => {
+    removeFromMovieList(
+      movie,
+      watchlist,
+      setWatchlist,
+      endpoints.deleteWatchlist,
+    );
+  };
+
+  const addReview = (movie, review) => {
+    if (!isAuthenticated) return;
+    setMyReviews({ ...myReviews, [movie.id]: review });
   };
 
   //Function to put JWT token in local storage.
@@ -70,8 +100,12 @@ export function AppProvider(props) {
       setToken(result.token);
       setIsAuthenticated(true);
       setUserName(username);
-      const entry = await endpoints.getFavorites(username);
-      setFavorites(entry.movies);
+      const [favs, wl] = await Promise.all([
+        endpoints.getFavorites(username),
+        endpoints.getWatchlist(username),
+      ]);
+      setFavorites(favs.movies);
+      setWatchlist(wl.movies);
     }
     return result;
   };
@@ -97,12 +131,16 @@ export function AppProvider(props) {
       <Movies.Provider
         value={{
           favorites,
+          initFavorites,
           addToFavorites,
           removeFromFavorites,
+
+          watchlist,
+          initWatchlist,
+          addToWatchlist,
+          removeFromWatchlist,
+
           addReview,
-          mustWatch,
-          addMustWatch,
-          initFavorites,
         }}
       >
         {props.children}

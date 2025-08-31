@@ -29,6 +29,7 @@ const App = () => {
                 path="/movies/favorites"
                 element={<pages.FavoriteMovies />}
               />
+              <Route path="/movies/watchlist" element={<pages.Watchlist />} />
             </Route>
             <Route path="/movies/upcoming" element={<pages.UpcomingMovies />} />
             <Route path="/movies/trending" element={<pages.TrendingMovies />} />

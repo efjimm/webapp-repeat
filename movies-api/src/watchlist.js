@@ -1,7 +1,7 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
 
-import { favoritesModel } from "./models.js";
+import { watchlistModel } from "./models.js";
 
 const router = express.Router(); // eslint-disable-line
 
@@ -9,11 +9,10 @@ router.get(
   "/:username",
   asyncHandler(async (req, res) => {
     const username = req.params.username;
-    const movies = await favoritesModel.findByUsername(username);
+    const movies = await watchlistModel.findByUsername(username);
     if (!movies) {
       return res.status(404).json({ success: false, msg: "User not found." });
     }
-    console.log(movies);
     res.status(200).json(movies);
   }),
 );
@@ -22,7 +21,7 @@ router.put(
   "/:username",
   asyncHandler(async (req, res) => {
     const username = req.params.username;
-    const doc = await favoritesModel.findOne({ username: username });
+    const doc = await watchlistModel.findOne({ username: username });
     if (!doc) {
       return res.status(404).json({ success: false, msg: "User not found." });
     }
@@ -41,7 +40,7 @@ router.delete(
   "/:username",
   asyncHandler(async (req, res) => {
     const username = req.params.username;
-    const doc = await favoritesModel.findOne({ username: username });
+    const doc = await watchlistModel.findOne({ username: username });
     if (!doc) {
       return res.status(404).json({ success: false, msg: "User not found." });
     }

@@ -162,6 +162,44 @@ export function FavoriteMovies() {
   );
 }
 
+export function Watchlist() {
+  const { watchlist: movieIds } = useContext(context.Movies);
+
+  const queries = useQueries(
+    movieIds.map((movieId) => {
+      return {
+        queryKey: ["movie", { id: movieId }],
+        queryFn: endpoints.getMovie,
+      };
+    }),
+  );
+  const isLoading = queries.find((m) => m.isLoading === true);
+
+  if (isLoading) {
+    return <comp.Spinner />;
+  }
+
+  const movies = queries.map((q) => {
+    q.data.genre_ids = q.data.genres.map((g) => g.id);
+    return q.data;
+  });
+
+  return (
+    <comp.MovieListPage
+      title="Watchlist"
+      movies={movies}
+      action={(movie) => {
+        return (
+          <>
+            <comp.RemoveFromWatchlistIcon movie={movie} />
+            <comp.WriteReviewIcon movie={movie} />
+          </>
+        );
+      }}
+    />
+  );
+}
+
 export function Home() {
   const [page, setPage] = useState(1);
   const { data, error, isLoading, isError } = useQuery(
@@ -186,7 +224,7 @@ export function Home() {
       page={page}
       setPage={setPage}
       action={(movie) => {
-        return <comp.AddToFavoritesIcon movie={movie} />;
+        return <CommonMovieActions movie={movie} />;
       }}
     />
   );
@@ -326,7 +364,7 @@ export function Person() {
     <comp.MovieListPage
       title={person.name}
       movies={movies.data.cast}
-      action={(movie) => <comp.AddToFavoritesIcon movie={movie} />}
+      action={(movie) => <CommonMovieActions movie={movie} />}
     >
       <ui.Grid2 container>
         <ui.Grid2
@@ -472,9 +510,7 @@ export function TopRatedMovies() {
     <comp.MovieListPage
       title="Top Rated Movies"
       movies={movies}
-      action={(movie) => {
-        return <comp.AddToFavoritesIcon movie={movie} />;
-      }}
+      action={(movie) => <CommonMovieActions movie={movie} />}
       page={page}
       setPage={setPage}
     />
@@ -500,10 +536,17 @@ export function TrendingMovies() {
     <comp.MovieListPage
       title="Trending Movies"
       movies={movies}
-      action={(movie) => {
-        return <comp.AddToFavoritesIcon movie={movie} />;
-      }}
+      action={(movie) => <CommonMovieActions movie={movie} />}
     />
+  );
+}
+
+function CommonMovieActions(props) {
+  return (
+    <>
+      <comp.AddToFavoritesIcon movie={props.movie} />
+      <comp.AddToWatchlistIcon movie={props.movie} />
+    </>
   );
 }
 
@@ -526,7 +569,7 @@ export function UpcomingMovies() {
     <comp.MovieListPage
       title="Upcoming Movies"
       movies={movies}
-      action={(movie) => <comp.AddToMustWatchIcon movie={movie} />}
+      action={(movie) => <comp.AddToWatchlistIcon movie={movie} />}
     />
   );
 }

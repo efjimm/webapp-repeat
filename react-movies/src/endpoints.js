@@ -33,15 +33,7 @@ export const signup = async (username, password) => {
 
 export async function getMovies(args) {
   const page = args.queryKey[1].page;
-  const response = await fetch(
-    `http://localhost:8080/api/movies?page=${page}`,
-    // {
-    //   headers: {
-    //     Authorization: window.localStorage.getItem("token"),
-    //   },
-    // },
-  );
-  console.log(response);
+  const response = await fetch(`http://localhost:8080/api/movies?page=${page}`);
   return response.json();
 }
 

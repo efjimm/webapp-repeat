@@ -48,26 +48,30 @@ export function AddToFavoritesIcon({ movie }) {
   const authCtx = useContext(context.Auth);
   const navigate = useNavigate();
 
-  if (movie.favorite) {
-    return (
-      <ui.IconButton>
-        <icons.Favorite fontSize="large" sx={{ color: "red" }} />
-      </ui.IconButton>
-    );
-  }
-
-  const handleAddToFavorites = (e) => {
+  const onClick = (e) => {
     e.preventDefault();
     if (!authCtx.isAuthenticated) {
       navigate("/login", { replace: true });
       return;
     }
 
-    ctx.addToFavorites(movie);
+    if (!movie.favorite) {
+      ctx.addToFavorites(movie);
+    } else {
+      ctx.removeFromFavorites(movie);
+    }
   };
 
+  if (movie.favorite) {
+    return (
+      <ui.IconButton aria-label="Remove from favorites" onClick={onClick}>
+        <icons.Favorite fontSize="large" sx={{ color: "red" }} />
+      </ui.IconButton>
+    );
+  }
+
   return (
-    <ui.IconButton aria-label="add to favorites" onClick={handleAddToFavorites}>
+    <ui.IconButton aria-label="Add to favorites" onClick={onClick}>
       <icons.FavoriteBorder color="primary" fontSize="large" />
     </ui.IconButton>
   );
@@ -78,31 +82,32 @@ export function AddToWatchlistIcon({ movie }) {
   const authCtx = useContext(context.Auth);
   const navigate = useNavigate();
 
-  if (movie.watchlist) {
-    // This is wrapped in a button just so it's the same size as before, the button
-    // doesn't actually do anything.
-    return (
-      <ui.IconButton>
-        <icons.PlaylistAddCheck fontSize="large" sx={{ color: "green" }} />
-      </ui.IconButton>
-    );
-  }
-
-  const handleAddToWatchlist = (e) => {
+  const onClick = (e) => {
     e.preventDefault();
     if (!authCtx.isAuthenticated) {
       navigate("/login", { replace: true });
       return;
     }
 
-    ctx.addToWatchlist(movie);
+    if (!movie.watchlist) {
+      ctx.addToWatchlist(movie);
+    } else {
+      ctx.removeFromWatchlist(movie);
+    }
   };
 
+  if (movie.watchlist) {
+    // This is wrapped in a button just so it's the same size as before, the button
+    // doesn't actually do anything.
+    return (
+      <ui.IconButton aria-label="Remove from watchlist" onClick={onClick}>
+        <icons.PlaylistAddCheck fontSize="large" sx={{ color: "green" }} />
+      </ui.IconButton>
+    );
+  }
+
   return (
-    <ui.IconButton
-      aria-label="Add to must watch"
-      onClick={handleAddToWatchlist}
-    >
+    <ui.IconButton aria-label="Add to watchlist" onClick={onClick}>
       <icons.PlaylistAdd color="primary" fontSize="large" />
     </ui.IconButton>
   );
@@ -755,7 +760,6 @@ export function SiteHeader() {
     { label: "Trending", path: "/movies/trending" },
     { label: "Top Rated", path: "/movies/top_rated" },
   ];
-  console.log(`Authed: ${ctx.isAuthenticated}`);
   if (!ctx.isAuthenticated) {
     menuOptions.push(
       { label: "Sign up", path: "/signup" },

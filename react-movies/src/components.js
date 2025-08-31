@@ -184,6 +184,10 @@ export function FilterMoviesCard(props) {
     handleChange(e, "genre", e.target.value);
   };
 
+  const handleSortChange = (e) => {
+    handleChange(e, "sort", e.target.value);
+  };
+
   return (
     <ui.Card
       sx={{
@@ -221,6 +225,21 @@ export function FilterMoviesCard(props) {
                 </ui.MenuItem>
               );
             })}
+          </ui.Select>
+        </ui.FormControl>
+        <ui.FormControl sx={{ ...formControl }}>
+          <ui.InputLabel id="sort-label">Sort</ui.InputLabel>
+          <ui.Select
+            labelId="sort-label"
+            id="sort-select"
+            defaultValue="none"
+            value={props.sort}
+            onChange={handleSortChange}
+          >
+            <ui.MenuItem value="none">None</ui.MenuItem>
+            <ui.MenuItem value="release_date">Date</ui.MenuItem>
+            <ui.MenuItem value="popularity">Popularity</ui.MenuItem>
+            <ui.MenuItem value="rating">Rating</ui.MenuItem>
           </ui.Select>
         </ui.FormControl>
       </ui.CardContent>
@@ -910,19 +929,41 @@ export function MovieListPage({
 }) {
   const [nameFilter, setNameFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("0");
+  const [sort, setSort] = useState("none");
   const genreId = Number(genreFilter);
 
+  const sortFunctions = {
+    release_date: (m1, m2) => {
+      const d1 = new Date(m1.release_date);
+      const d2 = new Date(m2.release_date);
+      return d2 - d1;
+    },
+    rating: (m1, m2) => m2.vote_average - m1.vote_average,
+    popularity: (m1, m2) => m2.popularity - m1.popularity,
+  };
+
+  const sortFn = sortFunctions[sort] || (() => 0);
+
   let displayedMovies = movies
-    .filter((m) => {
-      return m.title.toLowerCase().search(nameFilter.toLowerCase()) !== -1;
-    })
-    .filter((m) => {
-      return genreId > 0 ? m.genre_ids.includes(genreId) : true;
-    });
+    .filter(
+      (m) => m.title.toLowerCase().search(nameFilter.toLowerCase()) !== -1,
+    )
+    .filter((m) => genreId <= 0 || m.genre_ids.includes(genreId))
+    .sort(sortFn);
+  console.log(movies[0]);
 
   const handleChange = (type, value) => {
-    if (type === "name") setNameFilter(value);
-    else setGenreFilter(value);
+    switch (type) {
+      case "name":
+        setNameFilter(value);
+        break;
+      case "genre":
+        setGenreFilter(value);
+        break;
+      case "sort":
+        setSort(value);
+        break;
+    }
   };
 
   return (
@@ -942,6 +983,7 @@ export function MovieListPage({
               onUserInput={handleChange}
               titleFilter={nameFilter}
               genreFilter={genreFilter}
+              sort={sort}
             />
           </ui.Grid2>
           <MovieList action={action} movies={displayedMovies}></MovieList>

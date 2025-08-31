@@ -31,7 +31,6 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use("/api/users", usersRouter);
-
 app.use("/api/movies", moviesRouter);
 app.use("/api/favorites", authenticate, favoritesRouter);
 app.use("/api/watchlist", authenticate, watchlistRouter);

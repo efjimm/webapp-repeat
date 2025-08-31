@@ -17,7 +17,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import * as context from "./contexts.js";
 import * as endpoints from "./endpoints.js";
 import placeholderImg from "./images/film-poster-placeholder.png";
-import filterImg from "./images/pexels-dziana-hasanbekava-5480827.jpg";
 
 export function ProtectedRoutes() {
   const ctx = useContext(context.Auth);
@@ -986,6 +985,8 @@ export function MovieListPage({
         break;
       case "sortDirection":
         setSortDirection(value);
+        break;
+      default:
         break;
     }
   };

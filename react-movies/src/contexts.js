@@ -1,6 +1,5 @@
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext } from "react";
 import * as endpoints from "./endpoints.js";
-import * as context from "./contexts.js";
 
 export const Movies = React.createContext(null);
 export const Auth = createContext(null);
@@ -8,7 +7,7 @@ export const Auth = createContext(null);
 export function AppProvider(props) {
   const existingToken = localStorage.getItem("token");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [_, setAuthToken] = useState(existingToken);
+  const [_, setAuthToken] = useState(existingToken); // eslint-disable-line
   const [userName, setUserName] = useState("");
 
   const [favorites, setFavorites] = useState([]);

@@ -189,12 +189,7 @@ export function Watchlist() {
       title="Watchlist"
       movies={movies}
       action={(movie) => {
-        return (
-          <>
-            <comp.RemoveFromWatchlistIcon movie={movie} />
-            <comp.WriteReviewIcon movie={movie} />
-          </>
-        );
+        return <comp.RemoveFromWatchlistIcon movie={movie} />;
       }}
     />
   );
